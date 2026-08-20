@@ -1,5 +1,4 @@
 export const environment = {
-  apiBaseUrl: 'https://gray-wave-0b7704d00.7.azurestaticapps.net/login',
+  apiBaseUrl: 'http://localhost:5131/api',
 };
-
 
