@@ -74,16 +74,25 @@ builder.Services.AddScoped<IRevocationRule, PasswordChangedRule>();
 builder.Services.AddScoped<IRevocationRule, RoleChangedRule>();
 builder.Services.AddScoped<IRevocationRule, ManualAdminRevokeRule>();
 builder.Services.AddScoped<RevocationRuleEngine>();
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-    ?? new[] { "http://localhost:4200", "http://localhost:4300" };
+const string AngularClientCors = "AngularClient";
+
+var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"];
+
+if (string.IsNullOrWhiteSpace(allowedOrigin))
+{
+    throw new InvalidOperationException(
+        "Cors:AllowedOrigin is missing from application configuration.");
+}
 
 builder.Services.AddCors(options =>
 {
-    // Named policy, allowing Angular dev server origins (http://localhost:4200 and 4300)
     options.AddPolicy(AngularClientCors, policy =>
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    {
+        policy
+            .WithOrigins(allowedOrigin)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 var jwt = builder.Configuration.GetSection("Jwt");
