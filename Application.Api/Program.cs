@@ -74,7 +74,6 @@ builder.Services.AddScoped<IRevocationRule, PasswordChangedRule>();
 builder.Services.AddScoped<IRevocationRule, RoleChangedRule>();
 builder.Services.AddScoped<IRevocationRule, ManualAdminRevokeRule>();
 builder.Services.AddScoped<RevocationRuleEngine>();
-const string AngularClientCors = "AngularClient";
 
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"];
 
