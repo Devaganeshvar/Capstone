@@ -1,4 +1,4 @@
 export const environment = {
-  apiBaseUrl: 'https://gray-wave-0b7704d00.7.azurestaticapps.net/api',
+  apiBaseUrl: 'https://capstone-cpc3cybvggarb5hh.centralindia-01.azurewebsites.net/api',
 };
 
