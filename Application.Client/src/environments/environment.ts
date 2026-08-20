@@ -1,4 +1,4 @@
 export const environment = {
-  apiBaseUrl: '/api',
+  apiBaseUrl: 'https://gray-wave-0b7704d00.7.azurestaticapps.net/api',
 };
 
