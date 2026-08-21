@@ -1,0 +1,25 @@
+# ---- Build stage ----
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+COPY Application.Api/Application.Api.csproj Application.Api/
+
+RUN dotnet restore Application.Api/Application.Api.csproj
+
+COPY Application.Api/ Application.Api/
+
+RUN dotnet publish Application.Api/Application.Api.csproj -c Release -o /app/publish --no-restore
+
+# ---- Runtime stage ----
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+ENTRYPOINT ["dotnet", "Application.Api.dll"]
