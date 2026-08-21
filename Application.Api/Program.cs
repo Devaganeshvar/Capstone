@@ -173,12 +173,9 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedProductsAsync(db);
 }
 
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
+    
 app.UseHttpsRedirection();
 
 app.UseCors(AngularClientCors);
