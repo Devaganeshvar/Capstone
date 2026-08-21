@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Publish
-        run: dotnet publish Capstone-Ecommerce/Application.Api/Application.Api.csproj -c Release -o ./publish
+        run: dotnet publish Application.Api/Application.Api.csproj -c Release -o ./publish
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
