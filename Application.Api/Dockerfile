@@ -3,9 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
+COPY NuGet.Config ./
+
 COPY Application.Api/Application.Api.csproj Application.Api/
 
-RUN dotnet restore Application.Api/Application.Api.csproj
+RUN dotnet restore Application.Api/Application.Api.csproj --configfile NuGet.Config
 
 COPY Application.Api/ Application.Api/
 
