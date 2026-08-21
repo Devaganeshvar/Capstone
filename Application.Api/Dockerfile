@@ -12,7 +12,7 @@ COPY Application.Api/ Application.Api/
 RUN dotnet publish Application.Api/Application.Api.csproj -c Release -o /app/publish --no-restore
 
 # ---- Runtime stage ----
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
 WORKDIR /app
 
