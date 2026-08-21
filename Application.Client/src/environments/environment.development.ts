@@ -1,5 +1,5 @@
 export const environment = {
-  apiBaseUrl: 'http://localhost:5131/api',
+  apiBaseUrl: 'https://delightful-tree-05543dc00.7.azurestaticapps.net/api',
 };
 
 
