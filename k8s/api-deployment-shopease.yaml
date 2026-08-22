@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopease-api
+  namespace: shopease
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopease-api
+  template:
+    metadata:
+      labels:
+        app: shopease-api
+    spec:
+      containers:
+        - name: api
+          image: shopeasecapstoneacr.azurecr.io/shopease-api:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: shopease-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopease-api
+  namespace: shopease
+spec:
+  type: ClusterIP
+  selector:
+    app: shopease-api
+  ports:
+    - port: 8080
+      targetPort: 8080

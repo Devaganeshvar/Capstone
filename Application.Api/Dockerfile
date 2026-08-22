@@ -11,7 +11,7 @@ RUN dotnet restore Application.Api/Application.Api.csproj --configfile NuGet.Con
 
 COPY Application.Api/ Application.Api/
 
-RUN dotnet publish Application.Api/Application.Api.csproj -c Release -o /app/publish --no-restore
+RUN dotnet publish Application.Api/Application.Api.csproj -c Release -o /app/publish --configfile NuGet.Config
 
 # ---- Runtime stage ----
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime

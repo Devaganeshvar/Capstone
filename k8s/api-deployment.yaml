@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopease-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopease-api
+  template:
+    metadata:
+      labels:
+        app: shopease-api
+    spec:
+      containers:
+        - name: shopease-api
+          image: shopeasecapstoneacr.azurecr.io/shopease-api:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__Default
+              value: "Server=tcp:capstoneapp.database.windows.net,1433;Initial Catalog=Capstone;Persist Security Info=False;User ID=capstone;Password=Admin@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+            - name: Cors__AllowedOrigins__0
+              value: "http://4.247.208.54"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopease-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: shopease-api
+  ports:
+    - port: 8080
+      targetPort: 8080

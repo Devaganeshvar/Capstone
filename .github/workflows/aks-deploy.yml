@@ -1,0 +1,77 @@
+name: Deploy ShopEase to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACR_NAME: shopeasecapstoneacr
+  AKS_RESOURCE_GROUP: rg-shopease-capstone
+  AKS_CLUSTER_NAME: shopease-capstone-aks
+  NAMESPACE: shopease
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build and push API image
+        run: |
+          docker build \
+            -t ${{ env.ACR_NAME }}.azurecr.io/shopease-api:${{ github.sha }} \
+            -f Application.Api/Dockerfile .
+
+          docker push \
+            ${{ env.ACR_NAME }}.azurecr.io/shopease-api:${{ github.sha }}
+
+      - name: Build and push Client image
+        run: |
+          docker build \
+            -t ${{ env.ACR_NAME }}.azurecr.io/shopease-client:${{ github.sha }} \
+            -f Application.Client/Dockerfile .
+
+          docker push \
+            ${{ env.ACR_NAME }}.azurecr.io/shopease-client:${{ github.sha }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ env.AKS_RESOURCE_GROUP }} \
+            --name ${{ env.AKS_CLUSTER_NAME }} \
+            --overwrite-existing
+
+      - name: Update API deployment
+        run: |
+          kubectl set image deployment/shopease-api \
+            api=${{ env.ACR_NAME }}.azurecr.io/shopease-api:${{ github.sha }} \
+            -n ${{ env.NAMESPACE }}
+
+      - name: Update Client deployment
+        run: |
+          kubectl set image deployment/shopease-client \
+            client=${{ env.ACR_NAME }}.azurecr.io/shopease-client:${{ github.sha }} \
+            -n ${{ env.NAMESPACE }}
+
+      - name: Verify API rollout
+        run: |
+          kubectl rollout status deployment/shopease-api \
+            -n ${{ env.NAMESPACE }} \
+            --timeout=180s
+
+      - name: Verify Client rollout
+        run: |
+          kubectl rollout status deployment/shopease-client \
+            -n ${{ env.NAMESPACE }} \
+            --timeout=180s

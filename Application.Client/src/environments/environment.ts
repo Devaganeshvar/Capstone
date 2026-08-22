@@ -1,4 +1,4 @@
 export const environment = {
-  apiBaseUrl: 'https://delightful-tree-05543dc00.7.azurestaticapps.net/api',
+  production: true,
+  apiBaseUrl: 'http://4.247.215.246/api'
 };
-

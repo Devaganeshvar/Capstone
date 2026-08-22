@@ -28,3 +28,4 @@ packages/
 # OS
 Thumbs.db
 .DS_Store
+k8s/secrets.yaml
